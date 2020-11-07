@@ -1,0 +1,4 @@
+*.log
+##### Composer
+composer.phar
+/vendor/
