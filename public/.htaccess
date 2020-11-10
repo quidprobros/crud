@@ -1,0 +1,4 @@
+
+DirectoryIndex index.php /controller.php
+
+FallbackResource /controller.php

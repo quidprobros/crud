@@ -9,9 +9,9 @@
         <script type="text/javascript" src="/js/bootstrap.bundle.min.js" defer></script>
         <script type="text/javascript" src="/js/jquery.form.min.js" defer></script>
         <style>
-          html {
-           padding: 0.5rem;
-          }
+         html {
+             padding: 0.5rem;
+         }
         </style>
 
         <meta charset="UTF-8"/>
@@ -19,7 +19,7 @@
     </head>
     <body>
         <h1>Subscription form</h1>
-        <form id="myForm" action="/process/home-form.php" method="post" data-no-instant>
+        <form id="myForm" action="" method="POST" data-no-instant>
             <div class="form-row">
                 <div class="form-group col-12 col-lg-6 col-xl-4">
                     <label for="subscriberName">Your name</label>
@@ -64,45 +64,36 @@
                     <small class="form-text text-muted">Briefly, explain why you'd like to join our cult.</small>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary" type="button">
+            <button type="submit" class="btn btn-primary">
                 <span class="spinner-ph"></span>
                 Submit
             </button>
-            <button type="reset" class="btn btn-secondary" type="button">Reset</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
 
         </form>
         <div id="formResults"></div>
     </body>
 
+    <script>
+     $(function() {
 
-    <script type="text/javascript">
-      $(function() {
-          const app = (function bar() {
-              var cleave = new Cleave(".input-phone", {
-                  phone: true,
-                  phoneRegionCode: "US",
-              })
+         const app = (function bar() {
+             var cleave = new Cleave(".input-phone", {
+                 phone: true,
+                 phoneRegionCode: "US",
+             })
 
-              $("form").on("submit", function(e) {
-                  e.preventDefault()
-                  console.log("form submitted");
-                  const ajaxForm = $(this).ajaxSubmit({
-                      beforeSubmit: () => {
-                          $("button[type='submit'] > span").addClass("spinner-border spinner-border-sm")
-                      },
-                      dataType: "HTML",
-                      target: "#formResults",
-                  })
-                  const xhr = ajaxForm.data("jqxhr")
-                  xhr.done((data, status, jqXHR) => {
-                      console.log(jqXHR)
-                      $("button[type='submit'] > span").removeClass("spinner-border spinner-border-sm")
-                      $("#formResults").html(jqXHR.responseText)
-                  })
-              })
-              return bar
-          })
-          app()
-      });
+             $("form#myForm").on("submit", function(e) {
+                 e.preventDefault()
+                 const data = $(this).serializeArray();
+                 $.post("/process", data, function(d) {
+                    console.log(d); 
+                 });
+
+             });
+             return bar
+         });
+         app()
+     });
     </script>
 </html>
