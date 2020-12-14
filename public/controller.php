@@ -8,7 +8,6 @@ use \Monolog\Logger;
 use \Monolog\Handler\BrowserConsoleHandler;
 use \Monolog\Handler\StreamHandler;
 
-
 use \Riimu\Kit\PathJoin\Path;
 
 $whoops = new \Whoops\Run;
@@ -20,9 +19,7 @@ Kint\Renderer\RichRenderer::$folder = false;
 function ddd(...$parameters)
 {
     d(...$parameters);
-    //    exit;
 }
-
 
 Kint::$aliases[] = 'ddd';
 
@@ -54,9 +51,10 @@ Flight::register(
 );
 
 
-Kint::$enabled_mode = true;
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
+// Kint::$enabled_mode = true;
+// error_reporting(E_ALL);
+// ini_set('display_errors', 'On');
+
 Flight::set('flight.log_errors', true);
 
 Flight::set('flight.base_url', '..');
@@ -75,7 +73,7 @@ $logger->info("APP_ENVIRONMENT: ".getenv('APP_ENVIRONMENT'));
 $logger->info("Logger is ready.");
 
 
-Flight::route('GET /(home|index)', function () {
+Flight::route('GET /', function () {
     Flight::render('index', []);
 });
 
@@ -83,10 +81,11 @@ Flight::route('GET /info', function () {
     Flight::render('info', []);
 });
 
+error_log("SHIT");
 
 Flight::route('POST /process', function () use ($logger) {
     $postData = (array) Flight::request()->data;
-    error_log(print_r($postData,true));
+    $logger->info($postData);
     try {
         $x = new App\SQLiteConnection();
     
@@ -94,48 +93,52 @@ Flight::route('POST /process', function () use ($logger) {
         s($e);
     }
 
-    exit;
-
-    // $postData = (array) Flight::request()->data;
+    $postData = (array) Flight::request()->data;
+    error_log(print_r($postData,true));
     // $processor = new App\FormProcessor($postData);
     // return Flight::json(["arr"=> 333]);
     
 });
 
-// Flight::route('POST /process/response', function () {
-//     Flight::render('process/response', []);
-// });
-
-// Flight::route('GET /tests/@test', function ($test) {
-//     Flight::render("tests/".$test, []);
-// });
-
-// Flight::route('GET /css/@style', function ($style) {
-//     error_log('lol');
-//     Flight::log($style);
-//     ddd($style);
-//     // require_once($install_path . '/public/css/bootstrap.min.css' );
-//     //require_once(string $file_name )
-//     // d(Flight::request());
-//     // d($route);
-//     die();
-// });
-
-Flight::map('error', function ($ex) use ($whoops) {
-        $whoops->handleException($ex);
-    });
-
-Flight::map('notFound', function () {
-        Flight::stop(404);
-        Flight::render('404', []);
+Flight::route('GET *', function ($route) {
+    error_log("SHIT");
+    //    Flight::render(, []);
 });
 
-
-
-// // Flight::map('warn', function ($ex) {
-// //     Flight::log($ex->getMessage());
-// //     return ;
+// // Flight::route('POST /process/response', function () {
+// //     Flight::render('process/response', []);
 // // });
+
+// // Flight::route('GET /tests/@test', function ($test) {
+// //     Flight::render("tests/".$test, []);
+// // });
+
+// // Flight::route('GET /css/@style', function ($style) {
+// //     error_log('lol');
+// //     Flight::log($style);
+// //     ddd($style);
+// //     // require_once($install_path . '/public/css/bootstrap.min.css' );
+// //     //require_once(string $file_name )
+// //     // d(Flight::request());
+// //     // d($route);
+// //     die();
+// // });
+
+// Flight::map('error', function ($ex) use ($whoops) {
+//         $whoops->handleException($ex);
+//     });
+
+// Flight::map('notFound', function () {
+//         Flight::stop(404);
+//         Flight::render('404', []);
+// });
+
+
+
+// // // Flight::map('warn', function ($ex) {
+// // //     Flight::log($ex->getMessage());
+// // //     return ;
+// // // });
 
 
 Flight::start();
